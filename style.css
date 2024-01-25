@@ -1,0 +1,13 @@
+body {
+  background-color: lightblue;
+}
+
+h1 {
+  font-size: 200px;
+  color: brown;
+  border: 10px, solid, black;
+  /* height: 10em; */
+  /* display: flex; */
+  /* align-items: center;
+  justify-content: center; */
+}

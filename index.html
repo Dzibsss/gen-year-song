@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Losowanie Roków</title>
+    <style>
+      body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+        transition: background-color 0.5s ease;
+        background-color: #fff;
+      }
+
+      h1 {
+        transition: color 0.5s ease, font-size 0.5s ease, font-family 0.5s ease;
+        font-size: 8vh;
+        margin: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <h1 id="wylosowanyRok">Losuj rok</h1>
+
+    <script>
+      let intervalId;
+      let losowanieAktywne = false;
+      let predkosc = 80; // Początkowa prędkość
+
+      const colorList = [
+        "#FF5733",
+        "#33FF57",
+        "#5733FF",
+        "#FF336E",
+        "#33FFD9", // Dodaj lub usuń kolory według potrzeb
+        // ...
+      ];
+
+      const fontList = [
+        "Arial, sans-serif",
+        "Helvetica, sans-serif",
+        "Times New Roman, serif",
+        "Courier New, monospace",
+        "Georgia, serif", // Dodaj lub usuń czcionki według potrzeb
+        // ...
+      ];
+
+      function losujElementZListy(lista) {
+        return lista[Math.floor(Math.random() * lista.length)];
+      }
+
+      function losujRok() {
+        return Math.floor(Math.random() * (2024 - 1958 + 1)) + 1958;
+      }
+
+      function aktualizujWyswietlanie(rok) {
+        const h1Element = document.getElementById("wylosowanyRok");
+        h1Element.textContent = `${rok}`;
+
+        const losowyKolorTla = losujElementZListy(colorList);
+        const losowyKolorFontu = losujElementZListy(colorList);
+        const losowyFont = losujElementZListy(fontList);
+
+        document.body.style.backgroundColor = losowyKolorTla;
+        h1Element.style.color = losowyKolorFontu;
+        h1Element.style.fontFamily = losowyFont;
+        h1Element.style.fontSize = "22vh";
+      }
+
+      function rozpocznijLosowanie() {
+        losowanieAktywne = true;
+        intervalId = setInterval(function () {
+          const rok = losujRok();
+          aktualizujWyswietlanie(rok);
+        }, predkosc);
+      }
+
+      function zatrzymajLosowanie() {
+        losowanieAktywne = false;
+        clearInterval(intervalId);
+      }
+
+      function resetujLosowanie() {
+        zatrzymajLosowanie();
+        const h1Element = document.getElementById("wylosowanyRok");
+
+        document.body.style.backgroundColor = "#fff";
+        h1Element.style.color = "#000";
+        h1Element.style.fontFamily = "inherit";
+        h1Element.style.fontSize = "8vh";
+        aktualizujWyswietlanie("Losuj rok");
+      }
+
+      function zmienPredkosc(procentZwiekszenia) {
+        predkosc = Math.round(predkosc * (1 + procentZwiekszenia / 100));
+        if (losowanieAktywne) {
+          zatrzymajLosowanie();
+          rozpocznijLosowanie();
+        }
+      }
+
+      document.addEventListener("keydown", function (event) {
+        if (event.key === "s" && !losowanieAktywne) {
+          rozpocznijLosowanie();
+        } else if (event.key === "e" && losowanieAktywne) {
+          zatrzymajLosowanie();
+        } else if (event.key === "r") {
+          resetujLosowanie();
+        } else if (event.key === "l") {
+          zmienPredkosc(25);
+        }
+      });
+    </script>
+  </body>
+</html>
